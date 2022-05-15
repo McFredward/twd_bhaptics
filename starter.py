@@ -43,9 +43,13 @@ if __name__ == '__main__':
     IS_DEBUG = False
 
     print("Initializing bHaptics connection..")
-    hap = haptics()
-    hap.register_files()
-    player = hap.player
+    try:
+        hap = haptics()
+        hap.register_files()
+        player = hap.player
+    except:
+        print("Error while connecting to the bHaptics Player. Make sure it is running.")
+        exit()
     print("Waiting for the game to start..")
     while True:
         try:

@@ -47,7 +47,8 @@ def initialize():
         x = threading.Thread(target=thread_function, args=(1,))
         x.start()
     except:
-        print("Couldn't connect")
+        #print("Error while connecting to the bHaptics Player. Make sure it is running.")
+        exit()
         return
 
 
