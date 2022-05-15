@@ -24,7 +24,7 @@ Currently uses Tactosy for Arms and the Tactsuit (X40/X16)
 * Download the [release](https://github.com/McFredward/twd_bhaptics/releases/tag/init).
 * **Start the bHaptics Player**
 * Then just start ```twd_bhaptics.exe``` while the game is open or before you are opening the game. (The .exe and the folder have to be in the same directory!
-* Windows may complain due to unkown developer, you have to allow the program to run.
+* Windows may complain due to an unkown developer, you have to allow the program to run.
 * Once you closed the game you have to restart the mod!
 
 ## How To Use (using a Python interpreter)
