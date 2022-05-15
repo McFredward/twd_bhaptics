@@ -37,8 +37,8 @@ Currently uses Tactosy for Arms and the Tactsuit (X40/X16)
 This mod is more like what is often called a "Trainer", so it reads certain memory addresses of the game. This leads to the following issues:
 
 * If the player holds two guns in each of the hands, fast shots behind one another of the gun grabbed first are not recognised.
-* Skript can't detect if the game was closed, you have to abort the script manually using STRG+C (or just close the window) 
-* Unintended haptics while loading a level: values of the memory addresses are going crazy while loading a level
+* The mod can't detect if the game was closed, you have to abort the script manually using STRG+C (or just close the window).
+* Unintended haptics while loading a level: values of the memory addresses are going crazy while loading.
 
 ## Will this mod be updated for upcoming updates of the game?
 Probably not. It is very likely that the smallest update shifts the memory offsets, which means that the whole mod is not working anymore.
@@ -55,5 +55,5 @@ Thanks to [Florian Fahrenberger](https://github.com/floh-bhaptics) for his heavy
 * [tact-python](https://github.com/bhaptics/tact-python)
 * [pyinstaller](https://github.com/pyinstaller/pyinstaller)
 
-If you have any suggestions, feel free to open an Issue.
+If you have any suggestions, feel free to open an Issue. Or contact me (McFredward) in the bHaptics Discord.
 
