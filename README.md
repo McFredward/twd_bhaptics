@@ -45,7 +45,7 @@ Probably not. It is very likely that the smallest update shifts the memory offse
 Finding these offsets was the main workload creating this mod. Since it is OpenSource you are welcomed to search for broken offsets by yourself and therefore
 help me to fix it!
 
-Since then you have to [download the exact supported version](https://steamcommunity.com/sharedfiles/filedetails/?id=889624474) using [this Depot](https://steamdb.info/depot/916841/history/?changeid=M:894890414360019389).
+Since then you have to [download the exact supported version](https://steamcommunity.com/sharedfiles/filedetails/?id=889624474) using [this Depot](https://steamdb.info/depot/916841/history/?changeid=M:894890414360019389) (only for the Steam version, I have no idea how to download older versions within the Rift software).
 While I'm writing this, the supported version is the newest. **Make sure you don't update.**
 
 ## Credits & Libs
