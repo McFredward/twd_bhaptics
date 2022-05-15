@@ -46,7 +46,7 @@ Finding these offsets was the main workload creating this mod. Since it is OpenS
 help me to fix it!
 
 Since then you have to [download the exact supported version](https://steamcommunity.com/sharedfiles/filedetails/?id=889624474) using [this Depot](https://steamdb.info/depot/916841/history/?changeid=M:894890414360019389).
-By time the writing this, the supported version is the newest. **Make sure you don't update.**
+While I'm writing this, the supported version is the newest. **Make sure you don't update.**
 
 ## Credits & Libs
 Thanks to [Florian Fahrenberger](https://github.com/floh-bhaptics) for his heavy testing and the haptic-patterns!
