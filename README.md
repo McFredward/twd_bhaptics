@@ -55,5 +55,5 @@ Thanks to [Florian Fahrenberger](https://github.com/floh-bhaptics) for his heavy
 * [tact-python](https://github.com/bhaptics/tact-python)
 * [pyinstaller](https://github.com/pyinstaller/pyinstaller)
 
-If you have any suggestions, feel free to open an Issue. Or contact me (McFredward) in the bHaptics Discord.
+If you have any suggestions, feel free to open an Issue. Or contact me (McFredward) in the [bHaptics Discord](https://discord.com/invite/EYY2vAQP2u).
 
