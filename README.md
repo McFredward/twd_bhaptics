@@ -48,6 +48,7 @@ Thanks to [Florian Fahrenberger](https://github.com/floh-bhaptics) heavy testing
 
 * [PyMeow](https://github.com/qb-0/PyMeow)
 * [tact-python](https://github.com/bhaptics/tact-python)
+* [pyinstaller](https://github.com/pyinstaller/pyinstaller)
 
 If you have any suggestions, feel free to open an Issue.
 
