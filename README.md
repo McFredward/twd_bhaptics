@@ -28,7 +28,7 @@ Currently uses Tactosy for Arms and the Tactsuit (X40/X16)
 * Once you closed the game you have to restart the mod!
 
 ## How To Use (using a Python interpreter)
- Don't want to run a prebuild .exe? This is python project so just clone the repo and run the ```starter.py``` with a Python3.9 interpreter instead of the binary.
+ Don't want to run a prebuild .exe? This is a python project so just clone the repo and run the ```starter.py``` with a Python3.9 interpreter instead of the binary.
  You need to install the following dependencys:
  
 *  ```pip install websocket websocket-client```
