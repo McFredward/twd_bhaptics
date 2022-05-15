@@ -44,7 +44,7 @@ Since then you have to [download the exact supported version](https://steamcommu
 By time the writing this, the supported version is the newest steam version.
 
 ## Credits & Libs
-Thanks to [Florian Fahrenberger](https://github.com/floh-bhaptics) heavy testing and the haptic-patterns!
+Thanks to [Florian Fahrenberger](https://github.com/floh-bhaptics) for his heavy testing and the haptic-patterns!
 
 * [PyMeow](https://github.com/qb-0/PyMeow)
 * [tact-python](https://github.com/bhaptics/tact-python)
