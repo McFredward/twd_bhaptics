@@ -4,6 +4,8 @@ A bhaptics integration mod into The Walking Dead Saints & Sinners
 - This mod only supports ONLY the following game version: 2021.12.08 / build 218977-STAGE
 ```
 ## Features:
+Demonstration video on YouTube:<br />
+[![](https://img.youtube.com/vi/ScSQjtlFqtc/0.jpg)](http://www.youtube.com/watch?v=ScSQjtlFqtc)
 
 * Gunshot haptics (one-handed or two handed) on arms and vest
 * Zombie attacks haptics dependent on the direction
