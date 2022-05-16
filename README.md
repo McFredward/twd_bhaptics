@@ -3,6 +3,11 @@ A bhaptics integration mod into The Walking Dead Saints & Sinners
 ```diff
 - This mod only supports ONLY the following game version: 2021.12.08 / build 218977-STAGE
 ```
+This programm reads the memory of a different process which is often classified as *suspicious behavoir* by Anti-Virus programms. This could lead to **false-positive Anti-Virus alerts**. Make sure to add the .exe to the exception list if Windows Defender or some other Anti-Virus don't let you run it. 
+
+You don't trust the .exe? Just run the python script and check the code by yourself.
+
+
 ## Features:
 Demonstration video on YouTube:<br />
 [![](https://img.youtube.com/vi/ScSQjtlFqtc/0.jpg)](http://www.youtube.com/watch?v=ScSQjtlFqtc)
@@ -25,7 +30,6 @@ Currently uses Tactosy for Arms and the Tactsuit (X40/X16)
 * **Start the bHaptics Player**
 * Then just start ```twd_bhaptics.exe``` while the game is open or before you are opening the game. (The .exe and the folder ```tact_files``` have to be in the same directory!
 * Windows may complain due to an unkown developer, you have to allow the program to run.
-* Once you closed the game you have to restart the mod!
 
 ## How To Use (using a Python interpreter)
  Don't want to run a prebuild .exe? This is a python project so just clone the repo and run the ```starter.py``` with a Python3.9 interpreter instead of the binary.
@@ -39,6 +43,7 @@ This mod is more like what is often called a "Trainer", so it reads certain memo
 * If the player holds two guns in each of the hands, fast shots behind one another of the gun grabbed first are not recognised.
 * The mod can't detect if the game was closed, you have to abort the script manually using STRG+C (or just close the window).
 * Unintended haptics while loading a level: values of the memory addresses are going crazy while loading.
+* Once you closed the game you have to restart the mod!
 
 ## Will this mod be updated for upcoming updates of the game?
 Probably not. It is very likely that the smallest update shifts the memory offsets, which means that the whole mod is not working anymore.
