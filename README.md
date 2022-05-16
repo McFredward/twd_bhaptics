@@ -51,9 +51,9 @@ While I'm writing this, the supported version is the newest. **Make sure you don
 ## Credits & Libs
 Thanks to [Florian Fahrenberger](https://github.com/floh-bhaptics) for his heavy testing and the haptic-patterns!
 
-* [PyMeow](https://github.com/qb-0/PyMeow)
-* [tact-python](https://github.com/bhaptics/tact-python)
-* [pyinstaller](https://github.com/pyinstaller/pyinstaller)
+* [PyMeow](https://github.com/qb-0/PyMeow) using the *MIT License*.
+* [tact-python](https://github.com/bhaptics/tact-python) using the *bHaptics SDK agreement License*.
+* [pyinstaller](https://github.com/pyinstaller/pyinstaller) using the *GPL 2.0* License.
 
 If you have any suggestions, feel free to open an Issue. Or contact me (McFredward) in the [bHaptics Discord](https://discord.com/invite/EYY2vAQP2u).
 
