@@ -22,7 +22,7 @@ Demonstration video on YouTube:<br />
 * Eating-haptics
 * Healing haptics
 
-Currently uses Tactosy for Arms and the Tactsuit (X40/X16) 
+Currently uses Tactosy for Arms, Hands and the Tactsuit (X40/X16) 
 
 ## How To Use (easy)
 
