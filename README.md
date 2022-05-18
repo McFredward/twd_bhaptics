@@ -40,10 +40,9 @@ Currently uses Tactosy for Arms, Hands and the Tactsuit (X40/X16)
 ## Known issues
 This mod is more like what is often called a "Trainer", so it reads certain memory addresses of the game. This leads to the following issues:
 
+* Unintended haptics while loading a level: values of the memory addresses are going crazy while loading.
 * If the player holds two guns in each of the hands, fast shots behind one another of the gun grabbed first are not recognised.
 * The mod can't detect if the game was closed, you have to abort the script manually using STRG+C (or just close the window).
-* Unintended haptics while loading a level: values of the memory addresses are going crazy while loading.
-* Once you closed the game you have to restart the mod!
 
 ## Will this mod be updated for upcoming updates of the game?
 Probably not. It is very likely that the smallest update shifts the memory offsets, which means that the whole mod is not working anymore.
