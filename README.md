@@ -3,7 +3,7 @@ A bhaptics integration mod into The Walking Dead Saints & Sinners
 ```diff
 - This mod only supports ONLY the following game version: 2021.12.08 / build 218977-STAGE
 ```
-This programm reads the memory of a different process which is often classified as *suspicious behavoir* by Anti-Virus programms. This could lead to **false-positive Anti-Virus alerts**. Make sure to add the .exe to the exception list if Windows Defender or some other Anti-Virus don't let you run it. 
+This programm reads the memory of a different process which is often classified as *suspicious behavior* by Anti-Virus programms. This could lead to **false-positive Anti-Virus alerts**. Make sure to add the .exe to the exception list if Windows Defender or some other Anti-Virus don't let you run it. 
 
 You don't trust the .exe? Just run the python script and check the code by yourself.
 
