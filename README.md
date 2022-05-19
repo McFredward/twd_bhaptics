@@ -26,7 +26,7 @@ Currently uses Tactosy for Arms, Hands and the Tactsuit (X40/X16)
 
 ## How To Use (easy)
 
-* Download the [release](https://github.com/McFredward/twd_bhaptics/releases/tag/init).
+* Download the [release](https://github.com/McFredward/twd_bhaptics/releases/latest/).
 * **Start the bHaptics Player**
 * Then just start ```twd_bhaptics.exe``` while the game is open or before you are opening the game. (The .exe and the folder ```tact_files``` have to be in the same directory!
 * Windows may complain due to an unkown developer, you have to allow the program to run.
