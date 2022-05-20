@@ -1,6 +1,7 @@
 import pymeow
 import time
 import address_loader
+import logging
 from haptics import haptics
 
 #pip install websocket websocket-client
@@ -42,6 +43,12 @@ if __name__ == '__main__':
     """)
     IS_DEBUG = False
 
+    if(IS_DEBUG):
+        logging.basicConfig(level=logging.INFO, format='%(message)s')
+        logger = logging.getLogger()
+        logger.addHandler(logging.FileHandler('twd.log', 'w'))
+        print = logger.info
+
     print("Initializing bHaptics connection..")
     try:
         hap = haptics()
@@ -70,8 +77,9 @@ if __name__ == '__main__':
     loaded_adresses = address_loader.load(process,base_addr,hap,IS_DEBUG)
     ammo_addr, health_addr, zombie_attached_right_addr, zombie_attached_left_addr, is_both_hand_addr,\
     is_right_gun_addr, is_left_gun_addr,\
-    right_trigger_pressed_addr, left_trigger_pressed_addr, shoot_indicator_addr, is_backpack_outside_addr,\
-    is_shoulder_packed_addr, endurance_addr, is_eating_addr = tuple(loaded_adresses)
+    right_trigger_pressed_addr, left_trigger_pressed_addr, shoot_indicator_addr, is_backpack_outside1_addr,\
+    is_backpack_outside2_addr,is_shoulder_packed_addr, endurance_addr, is_eating_addr, is_lamp_outside_addr, is_book_outside_addr, \
+    stored_items_addr, is_left_stored_addr, is_right_stored_addr = tuple(loaded_adresses)
     print("Everything ok.")
 
     ammo = pymeow.read_int(process, ammo_addr)
@@ -85,8 +93,13 @@ if __name__ == '__main__':
     is_shoulder_packed_memory = 1 if pymeow.read_int(process, is_shoulder_packed_addr) != 0 else 0 #start value outside the loop
     is_backpack_outside_memory = 0
     health_memory = 1
+    stored_items_memory = 1000
+    is_left_stored_memory = False
+    is_right_stored_memory = False
     healing_started = False
     is_backpack_out = False
+    is_book_out = False
+    is_lamp_out = False
     counter = 0
     ammo_old = -1
     while True:
@@ -95,11 +108,12 @@ if __name__ == '__main__':
             #Check if the game is still running
             address_loader.dprint("Rechecking all addresses..",IS_DEBUG)
             # Load all adresses again
-            loaded_adresses = address_loader.load(process,base_addr,hap,IS_DEBUG)
+            loaded_adresses = address_loader.load(process, base_addr, hap, IS_DEBUG)
             ammo_addr, health_addr, zombie_attached_right_addr, zombie_attached_left_addr, is_both_hand_addr, \
             is_right_gun_addr, is_left_gun_addr, \
-            right_trigger_pressed_addr, left_trigger_pressed_addr, shoot_indicator_addr, is_backpack_outside_addr, \
-            is_shoulder_packed_addr, endurance_addr, is_eating_addr = tuple(loaded_adresses)
+            right_trigger_pressed_addr, left_trigger_pressed_addr, shoot_indicator_addr, is_backpack_outside1_addr, \
+            is_backpack_outside2_addr, is_shoulder_packed_addr, endurance_addr, is_eating_addr, is_lamp_outside_addr, is_book_outside_addr, \
+            stored_items_addr, is_left_stored_addr, is_right_stored_addr = tuple(loaded_adresses)
             counter = 0
 
         """
@@ -235,7 +249,6 @@ if __name__ == '__main__':
         else:
             shoot_indicator_true_phase = False
 
-        ammo_old = ammo
         """
         --------------------Damage and Healing--------------------
         """
@@ -299,8 +312,15 @@ if __name__ == '__main__':
         """
         try:
             is_shoulder_packed = 1 if pymeow.read_int(process, is_shoulder_packed_addr) != 0 else 0
-            is_backpack_outside = 1 if pymeow.read_int(process, is_backpack_outside_addr) != 0 else 0
+            is_backpack_outside1 = 1 if pymeow.read_int(process, is_backpack_outside1_addr) != 0 else 0
+            is_backpack_outside2 = 1 if pymeow.read_int(process, is_backpack_outside2_addr) != 0 else 0
+            is_backpack_outside = is_backpack_outside1 or is_backpack_outside2
             is_eating = 1 if pymeow.read_int(process, is_eating_addr) != 0 else 0
+            stored_items = pymeow.read_int(process, stored_items_addr)
+            is_lamp_outside = 1 if pymeow.read_int(process, is_lamp_outside_addr) != 0 else 0
+            is_book_outside = 1 if pymeow.read_int(process, is_book_outside_addr) != 0 else 0
+            is_left_stored =  1 if pymeow.read_int(process, is_left_stored_addr) != 0 else 0
+            is_right_stored =  1 if pymeow.read_int(process, is_right_stored_addr) != 0 else 0
         except:
             address_loader.dprint("Failed to load MISC addresses. Force reload..",IS_DEBUG)
             counter = 500
@@ -314,6 +334,16 @@ if __name__ == '__main__':
             print("Backpack in")
             player.submit_registered("BackpackStore_L")
             is_backpack_out = False
+
+        if(stored_items > stored_items_memory and not is_backpack_out and not (is_shoulder_packed > is_shoulder_packed_memory) and not \
+          (is_left_stored and not is_left_stored_memory) and not (is_right_stored and not is_right_stored_memory)
+          and not (ammo_old < ammo)):
+            print("Item stored")
+            player.submit_registered("ItemStore_L")
+
+        stored_items_memory = stored_items
+        is_left_stored_memory = is_left_stored
+        is_right_stored_memory = is_right_stored
 
         if(is_shoulder_packed > is_shoulder_packed_memory):
             print("Shoulder packed in")
@@ -332,5 +362,24 @@ if __name__ == '__main__':
             print("Stop eating")
             hap.is_eating_active = False
 
+        if(is_lamp_outside and not is_lamp_out):
+            print("Lamp packed out")
+            player.submit_registered("LampOut")
+            is_lamp_out = True
+        elif(not is_lamp_outside and is_lamp_out):
+            print("Lamp packed in")
+            player.submit_registered("LampOut")
+            is_lamp_out = False
+
+        if(is_book_outside and not is_book_out):
+            print("Book packed out")
+            player.submit_registered("BookOut")
+            is_book_out = True
+        elif(not is_book_outside and is_book_out):
+            print("Book packed in")
+            player.submit_registered("BookOut")
+            is_book_out = False
+
+        ammo_old = ammo
         counter += 1
         time.sleep(0.001)

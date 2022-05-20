@@ -65,8 +65,14 @@ def load(process,base_addr,haptics_obj,is_debug=False):
     #is_backpack_outside_base_address = base_addr + 0x062E54E8
     #is_backpack_outside_offsets = [0xF0,0x8,0x170,0xA40,0x1A0,0x8C]
 
-    is_backpack_outside_base_address = base_addr + 0x06347F20
-    is_backpack_outside_offsets = [0x30,0x2A0,0x128,0x8,0x1A8,0x110,0x330]
+    #Also fires if lamp or book is outside
+    is_backpack_outside1_base_address = base_addr + 0x06347F20
+    is_backpack_outside1_offsets = [0x30,0x2A0,0x128,0x8,0x1A8,0x110,0x330]
+
+    #Also fires if one grabs an item out of the backpack (only the first time in a level) WEIRD!
+    is_backpack_outside2_base_address = base_addr + 0x06347F20
+    is_backpack_outside2_offsets = [0x30,0x290,0x128,0xF0,0x58,0x690,0x2DC]
+    #Solution: Binary AND of both!
 
     #backpack_indicator_base_address = base_addr + 0x062A3C08
     #backpack_indicator_offsets = [0x90,0x38,0xA0,0x2D8,0x588]
@@ -85,6 +91,21 @@ def load(process,base_addr,haptics_obj,is_debug=False):
 
     is_eating_base_address = base_addr + 0x06347DF8
     is_eating_offsets = [0x120,0xB0,0x248,0x48,0x20,0x910,0x168]
+
+    is_lamp_outside_base_address = base_addr + 0x0634A1D0
+    is_lamp_outside_offsets = [0x0,0xA8,0x1A8,0x150,0x210,0x478,0x34]
+
+    is_book_outside_base_address = base_addr + 0x061E37F0
+    is_book_outside_offsets = [0x30,0xA8,0xD8,0x478,0xD28,0x20,0x34]
+
+    stored_items_base_address = base_addr + 0x0634A1D0
+    stored_items_offsets = [0x0,0x20,0x1A8,0x90,0xA8,0xB08]
+
+    is_left_stored_base_address = base_addr + 0x061E37F0
+    is_left_stored_offsets = [0x30,0x98,0x2B0,0x20,0xA8,0xC8,0x47C]
+
+    is_right_stored_base_address = base_addr + 0x060BB4A8
+    is_right_stored_offsets = [0xC8,0x40,0xB0,0x30,0xA8,0xD0,0x47C]
 
     tries_count = 0
     while True:
@@ -181,10 +202,18 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             time.sleep(0.1)
 
         try:
-            is_backpack_outside_addr = read_offsets(process, is_backpack_outside_base_address,
-                                                     is_backpack_outside_offsets)
+            is_backpack_outside1_addr = read_offsets(process, is_backpack_outside1_base_address,
+                                                     is_backpack_outside1_offsets)
         except:
-            dprint("is_backpack_outside_addr not found",is_debug)
+            dprint("is_backpack_outside1_addr not found",is_debug)
+            was_error = True
+            time.sleep(0.1)
+
+        try:
+            is_backpack_outside2_addr = read_offsets(process, is_backpack_outside2_base_address,
+                                                     is_backpack_outside2_offsets)
+        except:
+            dprint("is_backpack_outside2_addr not found",is_debug)
             was_error = True
             time.sleep(0.1)
 
@@ -212,6 +241,46 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             was_error = True
             time.sleep(0.1)
 
+        try:
+            is_lamp_outside_addr = read_offsets(process, is_lamp_outside_base_address,
+                                                     is_lamp_outside_offsets)
+        except:
+            dprint("is_lamp_outside_addr not found",is_debug)
+            was_error = True
+            time.sleep(0.1)
+
+        try:
+            is_book_outside_addr = read_offsets(process, is_book_outside_base_address,
+                                                     is_book_outside_offsets)
+        except:
+            dprint("is_book_outside_addr not found",is_debug)
+            was_error = True
+            time.sleep(0.1)
+
+        try:
+            stored_items_addr = read_offsets(process, stored_items_base_address,
+                                                     stored_items_offsets)
+        except:
+            dprint("stored_items_addr not found",is_debug)
+            was_error = True
+            time.sleep(0.1)
+
+        try:
+            is_left_stored_addr = read_offsets(process, is_left_stored_base_address,
+                                             is_left_stored_offsets)
+        except:
+            dprint("is_left_stored_addr not found", is_debug)
+            was_error = True
+            time.sleep(0.1)
+
+        try:
+            is_right_stored_addr = read_offsets(process, is_right_stored_base_address,
+                                             is_right_stored_offsets)
+        except:
+            dprint("is_right_stored_addr not found", is_debug)
+            was_error = True
+            time.sleep(0.1)
+
         # allow max 1 item to be kept from last iteration (probably health)
         #Otherwise assume it is in loading screen and keep trying to load
         if (not was_error):
@@ -227,6 +296,7 @@ def load(process,base_addr,haptics_obj,is_debug=False):
         tries_count += 1
         continue
     return [ammo_addr,health_addr,zombie_attached_right_addr,zombie_attached_left_addr,is_both_hand_addr,is_right_gun_addr,is_left_gun_addr,
-            right_trigger_pressed_addr,left_trigger_pressed_addr,shoot_indicator_addr,is_backpack_outside_addr,
-            is_shoulder_packed_addr,endurance_addr,is_eating_addr]
+            right_trigger_pressed_addr,left_trigger_pressed_addr,shoot_indicator_addr,is_backpack_outside1_addr,is_backpack_outside2_addr,
+            is_shoulder_packed_addr,endurance_addr,is_eating_addr,is_lamp_outside_addr,is_book_outside_addr,stored_items_addr,
+            is_left_stored_addr,is_right_stored_addr]
 
