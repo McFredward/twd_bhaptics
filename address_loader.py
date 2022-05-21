@@ -1,9 +1,11 @@
 import pymeow
 import time
+import logging
 
-def dprint(str,is_debug):
+def dprint(str,is_debug,logger):
     if(is_debug):
-        print(str)
+        logger.info(str)
+
 
 def read_offsets(proc, base_adress, offsets):
     basepoint = pymeow.read_int64(proc,base_adress)
@@ -16,7 +18,7 @@ def load_paused(process,base_addr,is_debug=False):
     pass
 
 #loaded_adresses is either empty or contains all addresses in the returned
-def load(process,base_addr,haptics_obj,is_debug=False):
+def load(process,base_addr,haptics_obj,logger,is_debug=False):
 
     ammo_base_adress1 = base_addr + 0x06347F20
     ammo_offsets1 = [0x30,0xDD8,0x120,0x128,0x0,0x5D0,0x110]
@@ -77,11 +79,18 @@ def load(process,base_addr,haptics_obj,is_debug=False):
     #backpack_indicator_base_address = base_addr + 0x062A3C08
     #backpack_indicator_offsets = [0x90,0x38,0xA0,0x2D8,0x588]
 
-    is_shoulder_packed_base_address = base_addr + 0x061E37F0
-    is_shoulder_packed_offsets = [0x258,0x148,0xB8,0x98,0xA8,0xB8,0x47C]
+    is_shoulder_packed1_base_address = base_addr + 0x061E37F0
+    is_shoulder_packed1_offsets = [0x258,0x148,0xB8,0x98,0xA8,0xB8,0x47C]
 
-    zombie_attached_right_base_address = base_addr + 0x06347F20
-    zombie_attached_right_offsets = [0x30,0x2F0,0x20,0xA8,0xF8,0x268,0x198]
+    is_shoulder_packed2_base_address = base_addr + 0x06347F20
+    is_shoulder_packed2_offsets = [0x30,0x290,0x2C8,0x138,0x128,0xD0,0x47C]
+
+    #Buggy sometimes
+    #zombie_attached_right_base_address = base_addr + 0x06347F20
+    #zombie_attached_right_offsets = [0x30,0x2F0,0x20,0xA8,0xF8,0x268,0x198]
+
+    zombie_attached_right_base_address = base_addr + 0x0634C130
+    zombie_attached_right_offsets = [0x8,0x8,0x170,0x258,0xA8,0x268,0x198]
 
     zombie_attached_left_base_address = base_addr + 0x05F9B480
     zombie_attached_left_offsets = [0x8,0x78,0x28,0x8,0x170,0x240,0x1A8]
@@ -95,17 +104,26 @@ def load(process,base_addr,haptics_obj,is_debug=False):
     is_lamp_outside_base_address = base_addr + 0x0634A1D0
     is_lamp_outside_offsets = [0x0,0xA8,0x1A8,0x150,0x210,0x478,0x34]
 
-    is_book_outside_base_address = base_addr + 0x061E37F0
-    is_book_outside_offsets = [0x30,0xA8,0xD8,0x478,0xD28,0x20,0x34]
+    is_book_outside1_base_address = base_addr + 0x0634A1D0
+    is_book_outside1_offsets = [0x0,0x20,0x128,0x10,0xD28,0x20,0x34]
+
+    is_book_outside2_base_address = base_addr + 0x061E37F0
+    is_book_outside2_offsets = [0x30,0xA8,0xD8,0x478,0xD28,0x20,0x34]
 
     stored_items_base_address = base_addr + 0x0634A1D0
     stored_items_offsets = [0x0,0x20,0x1A8,0x90,0xA8,0xB08]
 
-    is_left_stored_base_address = base_addr + 0x061E37F0
-    is_left_stored_offsets = [0x30,0x98,0x2B0,0x20,0xA8,0xC8,0x47C]
+    #is_left_stored_base_address = base_addr + 0x061E37F0
+    #is_left_stored_offsets = [0x30,0x98,0x2B0,0x20,0xA8,0xC8,0x47C]
 
-    is_right_stored_base_address = base_addr + 0x060BB4A8
-    is_right_stored_offsets = [0xC8,0x40,0xB0,0x30,0xA8,0xD0,0x47C]
+    is_left_stored_base_address = base_addr + 0x06347F20
+    is_left_stored_offsets = [0x30,0x290,0x2C0,0x48,0x10,0x58,0x47C]
+
+    #is_right_stored_base_address = base_addr + 0x060BB4A8
+    #is_right_stored_offsets = [0xC8,0x40,0xB0,0x30,0xA8,0xD0,0x47C]
+
+    is_right_stored_base_address = base_addr + 0x061E37F0
+    is_right_stored_offsets = [0x30,0xA8,0xE8,0x490,0x128,0xB8,0x47C]
 
     tries_count = 0
     while True:
@@ -123,57 +141,57 @@ def load(process,base_addr,haptics_obj,is_debug=False):
         try: #ammo has a bit more problems, some addresses work only in specific levels: test them all
             ammo_addr = read_offsets(process, ammo_base_adress1, ammo_offsets1)
         except:
-            dprint("ammo_addr not found. Trying alternative..",is_debug)
+            dprint("ammo_addr not found. Trying alternative..",is_debug,logger)
             try:
                 ammo_addr = read_offsets(process, ammo_base_adress2, ammo_offsets2)
             except:
-                dprint("ammo_addr not found. Trying alternative..", is_debug)
+                dprint("ammo_addr not found. Trying alternative..", is_debug,logger)
                 try:
                     ammo_addr = read_offsets(process, ammo_base_adress3, ammo_offsets3)
                 except:
-                    dprint("ammo_addr not found",is_debug)
+                    dprint("ammo_addr not found",is_debug,logger)
                     was_error = True
                     time.sleep(0.1)
 
         try:
             health_addr = read_offsets(process, health_base_adress, health_offsets)
         except:
-            dprint("health_addr not found",is_debug)
+            dprint("health_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
         try:
             zombie_attached_right_addr = read_offsets(process, zombie_attached_right_base_address, zombie_attached_right_offsets)
         except:
-            dprint("zombie_attached_right_addr not found",is_debug)
+            dprint("zombie_attached_right_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
         try:
             zombie_attached_left_addr = read_offsets(process, zombie_attached_left_base_address, zombie_attached_left_offsets)
         except:
-            dprint("zombie_attached_left_addr not found",is_debug)
+            dprint("zombie_attached_left_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
         try:
             is_both_hand_addr = read_offsets(process, is_both_hand_base_address, is_both_hand_offsets)
         except:
-            dprint("is_both_hand_addr not found",is_debug)
+            dprint("is_both_hand_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
         try:
             is_right_gun_addr = read_offsets(process, is_right_gun_base_address, is_right_gun_offsets)
         except:
-            dprint("is_right_gun_addr not found",is_debug)
+            dprint("is_right_gun_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
         try:
             is_left_gun_addr = read_offsets(process, is_left_gun_base_address, is_left_gun_offsets)
         except:
-            dprint("is_left_gun_addr not found",is_debug)
+            dprint("is_left_gun_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
@@ -181,7 +199,7 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             right_trigger_pressed_addr = read_offsets(process, right_trigger_pressed_base_address,
                                                 right_trigger_pressed_offsets)
         except:
-            dprint("right_trigger_pressed_addr not found",is_debug)
+            dprint("right_trigger_pressed_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
@@ -189,7 +207,7 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             left_trigger_pressed_addr = read_offsets(process, left_trigger_pressed_base_address,
                                                      left_trigger_pressed_offsets)
         except:
-            dprint("left_trigger_pressed_addr not found",is_debug)
+            dprint("left_trigger_pressed_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
@@ -197,7 +215,7 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             shoot_indicator_addr = read_offsets(process, shoot_indicator_base_address,
                                                      shoot_indicator_offsets)
         except:
-            dprint("shoot_indicator_addr not found",is_debug)
+            dprint("shoot_indicator_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
@@ -205,7 +223,7 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             is_backpack_outside1_addr = read_offsets(process, is_backpack_outside1_base_address,
                                                      is_backpack_outside1_offsets)
         except:
-            dprint("is_backpack_outside1_addr not found",is_debug)
+            dprint("is_backpack_outside1_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
@@ -213,15 +231,23 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             is_backpack_outside2_addr = read_offsets(process, is_backpack_outside2_base_address,
                                                      is_backpack_outside2_offsets)
         except:
-            dprint("is_backpack_outside2_addr not found",is_debug)
+            dprint("is_backpack_outside2_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
         try:
-            is_shoulder_packed_addr = read_offsets(process, is_shoulder_packed_base_address,
-                                                     is_shoulder_packed_offsets)
+            is_shoulder_packed1_addr = read_offsets(process, is_shoulder_packed1_base_address,
+                                                     is_shoulder_packed1_offsets)
         except:
-            dprint("is_shoulder_packed_addr not found",is_debug)
+            dprint("is_shoulder_packed1_addr not found",is_debug,logger)
+            was_error = True
+            time.sleep(0.1)
+
+        try:
+            is_shoulder_packed2_addr = read_offsets(process, is_shoulder_packed2_base_address,
+                                                     is_shoulder_packed2_offsets)
+        except:
+            dprint("is_shoulder_packed2_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
@@ -229,7 +255,7 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             endurance_addr = read_offsets(process, endurance_base_address,
                                                      endurance_offsets)
         except:
-            dprint("endurance_addr not found",is_debug)
+            dprint("endurance_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
@@ -237,7 +263,7 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             is_eating_addr = read_offsets(process, is_eating_base_address,
                                                      is_eating_offsets)
         except:
-            dprint("is_eating_addr not found",is_debug)
+            dprint("is_eating_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
@@ -245,23 +271,28 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             is_lamp_outside_addr = read_offsets(process, is_lamp_outside_base_address,
                                                      is_lamp_outside_offsets)
         except:
-            dprint("is_lamp_outside_addr not found",is_debug)
+            dprint("is_lamp_outside_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
         try:
-            is_book_outside_addr = read_offsets(process, is_book_outside_base_address,
-                                                     is_book_outside_offsets)
+            is_book_outside_addr = read_offsets(process, is_book_outside1_base_address,
+                                                     is_book_outside1_offsets)
         except:
-            dprint("is_book_outside_addr not found",is_debug)
-            was_error = True
-            time.sleep(0.1)
+            dprint("is_book_outside_addr not found. Trying alternative..",is_debug,logger)
+            try:
+                is_book_outside_addr = read_offsets(process, is_book_outside2_base_address,
+                                                         is_book_outside2_offsets)
+            except:
+                dprint("is_book_outside_addr not found.",is_debug,logger)
+                was_error = True
+                time.sleep(0.1)
 
         try:
             stored_items_addr = read_offsets(process, stored_items_base_address,
                                                      stored_items_offsets)
         except:
-            dprint("stored_items_addr not found",is_debug)
+            dprint("stored_items_addr not found",is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
@@ -269,7 +300,7 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             is_left_stored_addr = read_offsets(process, is_left_stored_base_address,
                                              is_left_stored_offsets)
         except:
-            dprint("is_left_stored_addr not found", is_debug)
+            dprint("is_left_stored_addr not found", is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
@@ -277,7 +308,7 @@ def load(process,base_addr,haptics_obj,is_debug=False):
             is_right_stored_addr = read_offsets(process, is_right_stored_base_address,
                                              is_right_stored_offsets)
         except:
-            dprint("is_right_stored_addr not found", is_debug)
+            dprint("is_right_stored_addr not found", is_debug,logger)
             was_error = True
             time.sleep(0.1)
 
@@ -297,6 +328,6 @@ def load(process,base_addr,haptics_obj,is_debug=False):
         continue
     return [ammo_addr,health_addr,zombie_attached_right_addr,zombie_attached_left_addr,is_both_hand_addr,is_right_gun_addr,is_left_gun_addr,
             right_trigger_pressed_addr,left_trigger_pressed_addr,shoot_indicator_addr,is_backpack_outside1_addr,is_backpack_outside2_addr,
-            is_shoulder_packed_addr,endurance_addr,is_eating_addr,is_lamp_outside_addr,is_book_outside_addr,stored_items_addr,
+            is_shoulder_packed1_addr,is_shoulder_packed2_addr,endurance_addr,is_eating_addr,is_lamp_outside_addr,is_book_outside_addr,stored_items_addr,
             is_left_stored_addr,is_right_stored_addr]
 

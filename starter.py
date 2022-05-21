@@ -6,10 +6,6 @@ from haptics import haptics
 
 #pip install websocket websocket-client
 
-#TODO: Schaden durch Explosion ?)
-#TODO: Schnelles Ablegen in den Rucksack)
-#TODO: Während verband anlegen erkennen
-
 #2021.12.08 / build 218977-STAGE
 """
 >>>>Current Problems and approximative workarounds<<<<<
@@ -43,10 +39,10 @@ if __name__ == '__main__':
     """)
     IS_DEBUG = False
 
+    logging.basicConfig(level=logging.INFO, format='%(message)s')
+    logger = logging.getLogger()
+    logger.addHandler(logging.FileHandler('twd.log', 'w'))
     if(IS_DEBUG):
-        logging.basicConfig(level=logging.INFO, format='%(message)s')
-        logger = logging.getLogger()
-        logger.addHandler(logging.FileHandler('twd.log', 'w'))
         print = logger.info
 
     print("Initializing bHaptics connection..")
@@ -74,11 +70,11 @@ if __name__ == '__main__':
 
     print("Waiting for values to appear..")
     #Initial loading of the adresses
-    loaded_adresses = address_loader.load(process,base_addr,hap,IS_DEBUG)
+    loaded_adresses = address_loader.load(process,base_addr,hap,logger,IS_DEBUG)
     ammo_addr, health_addr, zombie_attached_right_addr, zombie_attached_left_addr, is_both_hand_addr,\
     is_right_gun_addr, is_left_gun_addr,\
     right_trigger_pressed_addr, left_trigger_pressed_addr, shoot_indicator_addr, is_backpack_outside1_addr,\
-    is_backpack_outside2_addr,is_shoulder_packed_addr, endurance_addr, is_eating_addr, is_lamp_outside_addr, is_book_outside_addr, \
+    is_backpack_outside2_addr,is_shoulder_packed1_addr,is_shoulder_packed2_addr, endurance_addr, is_eating_addr, is_lamp_outside_addr, is_book_outside_addr, \
     stored_items_addr, is_left_stored_addr, is_right_stored_addr = tuple(loaded_adresses)
     print("Everything ok.")
 
@@ -90,7 +86,9 @@ if __name__ == '__main__':
     is_right_gun_memory = False
     is_left_gun_memory = False
     gun_focus = -1 # For two handed gun case: -1 undefined | 0 left | 1 right
-    is_shoulder_packed_memory = 1 if pymeow.read_int(process, is_shoulder_packed_addr) != 0 else 0 #start value outside the loop
+    is_shoulder_packed1 = 1 if pymeow.read_int(process, is_shoulder_packed1_addr) != 0 else 0
+    is_shoulder_packed2 = 1 if pymeow.read_int(process, is_shoulder_packed2_addr) != 0 else 0
+    is_shoulder_packed_memory = is_shoulder_packed1 or is_shoulder_packed2
     is_backpack_outside_memory = 0
     health_memory = 1
     stored_items_memory = 1000
@@ -106,13 +104,13 @@ if __name__ == '__main__':
         #Reload the adresses all 100 steps
         if(counter % 500 == 0):
             #Check if the game is still running
-            address_loader.dprint("Rechecking all addresses..",IS_DEBUG)
+            address_loader.dprint("Rechecking all addresses..",IS_DEBUG,logger)
             # Load all adresses again
-            loaded_adresses = address_loader.load(process, base_addr, hap, IS_DEBUG)
+            loaded_adresses = address_loader.load(process, base_addr, hap, logger, IS_DEBUG)
             ammo_addr, health_addr, zombie_attached_right_addr, zombie_attached_left_addr, is_both_hand_addr, \
             is_right_gun_addr, is_left_gun_addr, \
             right_trigger_pressed_addr, left_trigger_pressed_addr, shoot_indicator_addr, is_backpack_outside1_addr, \
-            is_backpack_outside2_addr, is_shoulder_packed_addr, endurance_addr, is_eating_addr, is_lamp_outside_addr, is_book_outside_addr, \
+            is_backpack_outside2_addr, is_shoulder_packed1_addr, is_shoulder_packed2_addr, endurance_addr, is_eating_addr, is_lamp_outside_addr, is_book_outside_addr, \
             stored_items_addr, is_left_stored_addr, is_right_stored_addr = tuple(loaded_adresses)
             counter = 0
 
@@ -128,10 +126,10 @@ if __name__ == '__main__':
             is_right_trigger_pressed = 1 if pymeow.read_float(process, right_trigger_pressed_addr) > 0.3 else 0
             is_left_trigger_pressed = 1 if pymeow.read_float(process, left_trigger_pressed_addr) > 0.3 else 0
         except:
-            address_loader.dprint("Failed to load GUN addresses. Force reload..",IS_DEBUG)
+            address_loader.dprint("Failed to load GUN addresses. Force reload..",IS_DEBUG,logger)
             counter = 500
             continue
-
+        #print("SI:"+str(shoot_indicator)+" SIG:"+str(is_right_gun)+" IRTP:"+str(is_right_trigger_pressed)+" A:"+str(ammo)+" AO:"+str(ammo_old))
         if(shoot_indicator):# there is some shot: now find out from where
             #print("is_right_gun:",is_right_gun,"is_right_trigger_pressed",is_right_trigger_pressed,"ammo < ammo_old",ammo < ammo_old)
             if(is_right_gun and is_right_trigger_pressed and ammo < ammo_old): #right shot
@@ -258,7 +256,7 @@ if __name__ == '__main__':
             zombie_attached_right = 1 if pymeow.read_int(process, zombie_attached_right_addr) != 0 else 0
             zombie_attached_left = 1 if pymeow.read_int(process, zombie_attached_left_addr) != 0 else 0
         except:
-            address_loader.dprint("Failed to load DAMAGE addresses. Force reload..",IS_DEBUG)
+            address_loader.dprint("Failed to load DAMAGE addresses. Force reload..",IS_DEBUG,logger)
             counter = 500 #forces reload
             continue
 
@@ -311,7 +309,9 @@ if __name__ == '__main__':
         --------------------MISC---------------------
         """
         try:
-            is_shoulder_packed = 1 if pymeow.read_int(process, is_shoulder_packed_addr) != 0 else 0
+            is_shoulder_packed1 = 1 if pymeow.read_int(process, is_shoulder_packed1_addr) != 0 else 0
+            is_shoulder_packed2 = 1 if pymeow.read_int(process, is_shoulder_packed2_addr) != 0 else 0
+            is_shoulder_packed = is_shoulder_packed1 or is_shoulder_packed2
             is_backpack_outside1 = 1 if pymeow.read_int(process, is_backpack_outside1_addr) != 0 else 0
             is_backpack_outside2 = 1 if pymeow.read_int(process, is_backpack_outside2_addr) != 0 else 0
             is_backpack_outside = is_backpack_outside1 or is_backpack_outside2
@@ -322,7 +322,7 @@ if __name__ == '__main__':
             is_left_stored =  1 if pymeow.read_int(process, is_left_stored_addr) != 0 else 0
             is_right_stored =  1 if pymeow.read_int(process, is_right_stored_addr) != 0 else 0
         except:
-            address_loader.dprint("Failed to load MISC addresses. Force reload..",IS_DEBUG)
+            address_loader.dprint("Failed to load MISC addresses. Force reload..",IS_DEBUG,logger)
             counter = 500
             continue
 
