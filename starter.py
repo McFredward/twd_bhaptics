@@ -36,6 +36,7 @@ if __name__ == '__main__':
     A bHaptics integration mod into The Walking Dead Saints & Sinners 
     Made by McFredward
     Haptic designs by Florian Fahrenberger
+    v.0.2.2
     """)
     IS_DEBUG = False
 
@@ -310,21 +311,73 @@ if __name__ == '__main__':
         """
         try:
             is_shoulder_packed1 = 1 if pymeow.read_int(process, is_shoulder_packed1_addr) != 0 else 0
-            is_shoulder_packed2 = 1 if pymeow.read_int(process, is_shoulder_packed2_addr) != 0 else 0
-            is_shoulder_packed = is_shoulder_packed1 or is_shoulder_packed2
-            is_backpack_outside1 = 1 if pymeow.read_int(process, is_backpack_outside1_addr) != 0 else 0
-            is_backpack_outside2 = 1 if pymeow.read_int(process, is_backpack_outside2_addr) != 0 else 0
-            is_backpack_outside = is_backpack_outside1 or is_backpack_outside2
-            is_eating = 1 if pymeow.read_int(process, is_eating_addr) != 0 else 0
-            stored_items = pymeow.read_int(process, stored_items_addr)
-            is_lamp_outside = 1 if pymeow.read_int(process, is_lamp_outside_addr) != 0 else 0
-            is_book_outside = 1 if pymeow.read_int(process, is_book_outside_addr) != 0 else 0
-            is_left_stored =  1 if pymeow.read_int(process, is_left_stored_addr) != 0 else 0
-            is_right_stored =  1 if pymeow.read_int(process, is_right_stored_addr) != 0 else 0
         except:
-            address_loader.dprint("Failed to load MISC addresses. Force reload..",IS_DEBUG,logger)
+            address_loader.dprint("Failed to load is_shoulder_packed1. Set it to zero..",IS_DEBUG,logger)
+            is_shoulder_packed1 = 0
+
+        try:
+            is_shoulder_packed2 = 1 if pymeow.read_int(process, is_shoulder_packed2_addr) != 0 else 0
+        except:
+            address_loader.dprint("Failed to load is_shoulder_packed2. Set it to zero..",IS_DEBUG,logger)
+            is_shoulder_packed2 = 0
+
+        try:
+            is_backpack_outside1 = 1 if pymeow.read_int(process, is_backpack_outside1_addr) != 0 else 0
+        except:
+            address_loader.dprint("Failed to load is_backpack_outside1. Set it to zero..",IS_DEBUG,logger)
+            is_backpack_outside1 = 0
+
+        try:
+            is_backpack_outside2 = 1 if pymeow.read_int(process, is_backpack_outside2_addr) != 0 else 0
+        except:
+            address_loader.dprint("Failed to load is_backpack_outside2. Set it to zero..",IS_DEBUG,logger)
+            is_backpack_outside2 = 0
+
+        try:
+            is_eating = 1 if pymeow.read_int(process, is_eating_addr) != 0 else 0
+        except:
+            address_loader.dprint("Failed to load is_eating. Force reload..",IS_DEBUG,logger)
             counter = 500
             continue
+
+        try:
+            stored_items = pymeow.read_int(process, stored_items_addr)
+        except:
+            address_loader.dprint("Failed to load stored_items. Force reload..",IS_DEBUG,logger)
+            counter = 500
+            continue
+
+        try:
+            is_lamp_outside = 1 if pymeow.read_int(process, is_lamp_outside_addr) != 0 else 0
+        except:
+            address_loader.dprint("Failed to load is_lamp_outside. Force reload..",IS_DEBUG,logger)
+            counter = 500
+            continue
+
+        try:
+            is_book_outside = 1 if pymeow.read_int(process, is_book_outside_addr) != 0 else 0
+        except:
+            address_loader.dprint("Failed to load is_book_outside. Force reload..",IS_DEBUG,logger)
+            counter = 500
+            continue
+
+        try:
+            is_left_stored = 1 if pymeow.read_int(process, is_left_stored_addr) != 0 else 0
+        except:
+            address_loader.dprint("Failed to load is_left_stored. Force reload..",IS_DEBUG,logger)
+            counter = 500
+            continue
+
+        try:
+            is_right_stored = 1 if pymeow.read_int(process, is_right_stored_addr) != 0 else 0
+        except:
+            address_loader.dprint("Failed to load is_left_stored. Force reload..",IS_DEBUG,logger)
+            counter = 500
+            continue
+
+        is_shoulder_packed = is_shoulder_packed1 or is_shoulder_packed2
+        is_backpack_outside = is_backpack_outside1 or is_backpack_outside2
+
 
         if(is_backpack_outside and not is_backpack_out):
             print("Backpack out")

@@ -110,6 +110,9 @@ def load(process,base_addr,haptics_obj,logger,is_debug=False):
     is_book_outside2_base_address = base_addr + 0x061E37F0
     is_book_outside2_offsets = [0x30,0xA8,0xD8,0x478,0xD28,0x20,0x34]
 
+    is_book_outside3_base_address = base_addr + 0x06347F20
+    is_book_outside3_offsets = [0x30,0x2E0,0x128,0x10,0xD28,0x20,0x34]
+
     stored_items_base_address = base_addr + 0x0634A1D0
     stored_items_offsets = [0x0,0x20,0x1A8,0x90,0xA8,0xB08]
 
@@ -122,8 +125,11 @@ def load(process,base_addr,haptics_obj,logger,is_debug=False):
     #is_right_stored_base_address = base_addr + 0x060BB4A8
     #is_right_stored_offsets = [0xC8,0x40,0xB0,0x30,0xA8,0xD0,0x47C]
 
-    is_right_stored_base_address = base_addr + 0x061E37F0
-    is_right_stored_offsets = [0x30,0xA8,0xE8,0x490,0x128,0xB8,0x47C]
+    is_right_stored2_base_address = base_addr + 0x061E37F0
+    is_right_stored2_offsets = [0x30,0xA8,0xE8,0x490,0x128,0xB8,0x47C]
+
+    is_right_stored1_base_address = base_addr + 0x060BA250
+    is_right_stored1_offsets = [0x0,0x28,0x48,0x20,0x128,0xB8,0x47C]
 
     tries_count = 0
     while True:
@@ -284,9 +290,14 @@ def load(process,base_addr,haptics_obj,logger,is_debug=False):
                 is_book_outside_addr = read_offsets(process, is_book_outside2_base_address,
                                                          is_book_outside2_offsets)
             except:
-                dprint("is_book_outside_addr not found.",is_debug,logger)
-                was_error = True
-                time.sleep(0.1)
+                dprint("is_book_outside_addr not found. Trying alternative again..", is_debug, logger)
+                try:
+                    is_book_outside_addr = read_offsets(process, is_book_outside3_base_address,
+                                                        is_book_outside3_offsets)
+                except:
+                    dprint("is_book_outside_addr not found", is_debug, logger)
+                    was_error = True
+                    time.sleep(0.1)
 
         try:
             stored_items_addr = read_offsets(process, stored_items_base_address,
@@ -305,12 +316,17 @@ def load(process,base_addr,haptics_obj,logger,is_debug=False):
             time.sleep(0.1)
 
         try:
-            is_right_stored_addr = read_offsets(process, is_right_stored_base_address,
-                                             is_right_stored_offsets)
+            is_right_stored_addr = read_offsets(process, is_right_stored1_base_address,
+                                             is_right_stored1_offsets)
         except:
-            dprint("is_right_stored_addr not found", is_debug,logger)
-            was_error = True
-            time.sleep(0.1)
+            dprint("is_right_stored_addr not found. Trying alternative..", is_debug, logger)
+            try:
+                is_right_stored_addr = read_offsets(process, is_right_stored2_base_address,
+                                                    is_right_stored2_offsets)
+            except:
+                dprint("is_right_stored_addr not found", is_debug, logger)
+                was_error = True
+                time.sleep(0.1)
 
         # allow max 1 item to be kept from last iteration (probably health)
         #Otherwise assume it is in loading screen and keep trying to load
