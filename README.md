@@ -15,7 +15,7 @@ Demonstration video on YouTube:<br />
 * Gunshot haptics (one-handed or two handed) on arms and vest
 * Zombie attacks haptics dependent on the direction
 * Get shots
-* Brabbing book and lamp from the chest
+* Haptics for grabbing book and lamp from the chest
 * Low health heart beat
 * Low endurance lung contraction
 * Grabbing and placing backpack haptics
