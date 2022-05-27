@@ -15,6 +15,7 @@ Demonstration video on YouTube:<br />
 * Gunshot haptics (one-handed or two handed) on arms and vest
 * Zombie attacks haptics dependent on the direction
 * Get shots
+* Brabbing book and lamp from the chest
 * Low health heart beat
 * Low endurance lung contraction
 * Grabbing and placing backpack haptics
@@ -41,6 +42,7 @@ Currently uses Tactosy for Arms, Hands and the Tactsuit (X40/X16)
 This mod is more like what is often called a "Trainer", so it reads certain memory addresses of the game. This leads to the following issues:
 
 * Unintended haptics while loading a level: values of the memory addresses are going crazy while loading.
+* Shots in the boat at the cinematic scene if you start a new game are not recognized.
 * If the player holds two guns in each of the hands, fast shots behind one another of the gun grabbed first are not recognised.
 * The mod can't detect if the game was closed, you have to abort the script manually using STRG+C (or just close the window).
 
