@@ -46,13 +46,12 @@ This mod is more like what is often called a "Trainer", so it reads certain memo
 * If the player holds two guns in each of the hands, fast shots behind one another of the gun grabbed first are not recognised.
 * The mod can't detect if the game was closed, you have to abort the script manually using STRG+C (or just close the window).
 
-## Will this mod be updated for upcoming updates of the game?
-Probably not. It is very likely that the smallest update shifts the memory offsets, which means that the whole mod is not working anymore.
-Finding these offsets was the main workload creating this mod. Since it is OpenSource you are welcomed to search for broken offsets by yourself and therefore
+## Will this mod be updated for the current version of the game?
+No. It is very likely that the smallest update shifts the memory offsets, which means that the whole mod is not working anymore.
+Finding these offsets was the main workload creating this mod. This is exactly what happend with the recent update. Since it is OpenSource you are welcomed to search for broken offsets by yourself and therefore
 help me to fix it!
 
-Since then you have to [download the exact supported version](https://steamcommunity.com/sharedfiles/filedetails/?id=889624474) using [this Depot](https://steamdb.info/depot/916841/history/?changeid=M:894890414360019389) (only for the Steam version, I have no idea how to download older versions within the Rift software).
-While I'm writing this, the supported version is the newest. **Make sure you don't update.**
+If you own the Steam version you can [download the exact supported version](https://steamcommunity.com/sharedfiles/filedetails/?id=889624474) using [this Depot](https://steamdb.info/depot/916841/history/?changeid=M:894890414360019389) (only for the Steam version, I have no idea how to download older versions within the Rift software). Use the manifset ID of the Version which came out on 9. December 2021.
 
 ## Credits & Libs
 Thanks to [Florian Fahrenberger](https://github.com/floh-bhaptics) for his heavy testing and the haptic-patterns!
